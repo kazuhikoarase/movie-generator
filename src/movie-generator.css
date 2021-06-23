@@ -1,0 +1,12 @@
+
+.movie-frame {
+  display: inline-block;
+  color: #fff;
+  background-color: #000;
+}
+
+.movie-frame,
+.movie-frame BUTTON {
+  font-family: sans-serif;
+  font-size: 11pt;
+}

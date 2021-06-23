@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.6.10/vue.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.2.2/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+    <script src="../src/movie-generator.js"></script>
+    <link rel="stylesheet" href="../src/movie-generator.css" />
+  </head>
+  <body>
+
+    <div id="app">
+      <timeconv></timeconv>
+      <br/>
+      <movie :width="width" :height="height" :num-frames="numFrames"
+          :scale="0.4" @render="renderHandler"></movie>
+    </div>
+
+    <script>
+
+new Vue({
+  el: '#app',
+  data: {
+    width: 1920,
+    height: 1080,
+    clips: (
+        'G C G G D7 D7 D7 D7 ' +
+        'G C G G A7 D7 G  G7 ' +
+        'C C G G D7 D7 G G7 ' +
+        'C C G G D7 D7 G G '
+      ).replace(/^\s+|\s+$/g, '').split(/\s+/g)
+  },
+  computed: {
+    numFrames: function() { return this.clips.length * 54; }
+  },
+  methods: {
+
+    renderHandler: function(ctx, detail) {
+
+      var clips = this.clips;
+      var clipPos = detail.currentFrame / detail.numFrames * clips.length;
+      var clipIndex = ~~clipPos;
+      var clipRatio = clipPos - clipIndex;
+      var fontFamily = 'sans-serif';
+
+      var hOffset = 120;
+
+      var drawText = function(text, x, y, fillStyle, strokeStyle, alpha) {
+
+        alpha = typeof alpha == 'number'? alpha : 1;
+
+        var subCtx = document.createElement('canvas').getContext('2d');
+        subCtx.canvas.width = ctx.canvas.width;
+        subCtx.canvas.height = ctx.canvas.height;
+
+        subCtx.textAlign = 'center';
+        subCtx.textBaseline  = 'middle';
+        subCtx.font = 'bold 200px ' + fontFamily;
+
+        subCtx.lineWidth = 16;
+        subCtx.strokeStyle = strokeStyle;
+        subCtx.strokeText(text, x, y);
+
+        subCtx.fillStyle = fillStyle;
+        subCtx.fillText(text, x, y);
+
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        ctx.drawImage(subCtx.canvas, 0, 0);
+        ctx.restore();
+      };
+
+      var drawCell = function(text, x, y, current) {
+        if (current) {
+          drawText(text, x, y, '#f00', '#fff');
+        } else {
+          drawText(text, x, y, '#fff', '#000');
+        }
+      };
+
+      var drawTranCell = function(text1, text2, x, y, ratio) {
+        drawText(text2, x, y, '#fff', '#000', ratio);
+        drawText(text1, x, y, '#f00', '#fff', 1 - ratio);
+      };
+
+      var threshold = 0.25;
+      var cellClipIndex = ~~(clipIndex / 2) * 2;
+
+      !function() {
+        var x = detail.width / 2;
+        var y = detail.height / 2 - hOffset;
+        var currText = cellClipIndex < clips.length?
+          clips[cellClipIndex] : '';
+        var nextText = cellClipIndex + 2 < clips.length?
+          clips[cellClipIndex + 2] : '';
+        if (cellClipIndex != clipIndex) {
+          drawTranCell(currText, nextText, x, y,
+            clipRatio > threshold? 1 : clipRatio / threshold);
+        } else {
+          drawCell(currText, x, y, cellClipIndex == clipIndex);
+        }
+      }();
+
+      cellClipIndex += 1;
+
+      !function() {
+        var x = detail.width / 2;
+        var y = detail.height / 2 + hOffset;
+        var currText = cellClipIndex < clips.length?
+          clips[cellClipIndex] : '';
+        var prevText = cellClipIndex - 2 >= 0?
+          clips[cellClipIndex - 2] : '';
+        if (cellClipIndex != clipIndex) {
+          drawTranCell(prevText, currText, x, y,
+            clipRatio > threshold? 1 : clipRatio / threshold);
+        } else {
+          drawCell(currText, x, y, cellClipIndex == clipIndex);
+        }
+      }();
+
+    }
+
+  }
+});
+
+    </script>
+
+  </body>
+</html>

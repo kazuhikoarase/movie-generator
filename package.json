@@ -1,0 +1,22 @@
+{
+  "name": "movie-generator",
+  "version": "0.0.1",
+  "description": "frame base movie generator",
+  "author": "Kazuhiko Arase",
+  "main": "src/movie-generator.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kazuhikoarase/movie-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/kazuhikoarase/movie-generator/issues"
+  },
+  "keywords": [
+    "movie",
+    "image",
+    "motion",
+    "png",
+    "animation"
+  ],
+  "license": "MIT"
+}
