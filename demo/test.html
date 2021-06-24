@@ -28,31 +28,35 @@
 
     <script>
 
-new Vue({
-  el: '#app',
-  methods: {
+!function() {
 
-    renderHandler: function(event) {
+  new Vue({
+    el: '#app',
+    methods: {
 
-      var ctx = event.ctx;
+      renderHandler: function(event) {
 
-      ctx.save();
+        var ctx = event.ctx;
 
-      ctx.translate(event.width / 2, event.height / 2);
-      ctx.rotate(Math.PI * 2 * event.currentFrame / event.numFrames);
+        ctx.save();
 
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.lineTo(100, 0);
-      ctx.lineWidth = 10;
-      ctx.strokeStyle = '#00f';
-      ctx.stroke();
+        ctx.translate(event.width / 2, event.height / 2);
+        ctx.rotate(Math.PI * 2 * event.currentFrame / event.numFrames);
 
-      ctx.restore();
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(100, 0);
+        ctx.lineWidth = 10;
+        ctx.strokeStyle = '#00f';
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
     }
+  });
 
-  }
-});
+}();
 
     </script>
 

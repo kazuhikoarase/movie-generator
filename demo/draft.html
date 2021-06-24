@@ -19,112 +19,116 @@
 
     <script>
 
-new Vue({
-  el: '#app',
-  data: {
-    width: 1920,
-    height: 1080,
-    clips: (
-        'G C G G D7 D7 D7 D7 ' +
-        'G C G G A7 D7 G  G7 ' +
-        'C C G G D7 D7 G G7 ' +
-        'C C G G D7 D7 G G '
-      ).replace(/^\s+|\s+$/g, '').split(/\s+/g)
-  },
-  computed: {
-    numFrames: function() { return this.clips.length * 54; }
-  },
-  methods: {
+!function() {
 
-    renderHandler: function(event) {
+  new Vue({
+    el: '#app',
+    data: {
+      width: 1920,
+      height: 1080,
+      clips: (
+          'G C G G D7 D7 D7 D7 ' +
+          'G C G G A7 D7 G  G7 ' +
+          'C C G G D7 D7 G G7 ' +
+          'C C G G D7 D7 G G '
+        ).replace(/^\s+|\s+$/g, '').split(/\s+/g)
+    },
+    computed: {
+      numFrames: function() { return this.clips.length * 54; }
+    },
+    methods: {
 
-      var ctx = event.ctx;
+      renderHandler: function(event) {
 
-      var clips = this.clips;
-      var clipPos = event.currentFrame / event.numFrames * clips.length;
-      var clipIndex = ~~clipPos;
-      var clipRatio = clipPos - clipIndex;
-      var fontFamily = 'sans-serif';
+        var ctx = event.ctx;
 
-      var hOffset = 120;
+        var clips = this.clips;
+        var clipPos = event.currentFrame / event.numFrames * clips.length;
+        var clipIndex = ~~clipPos;
+        var clipRatio = clipPos - clipIndex;
+        var fontFamily = 'sans-serif';
 
-      var drawText = function(text, x, y, fillStyle, strokeStyle, alpha) {
+        var hOffset = 120;
 
-        alpha = typeof alpha == 'number'? alpha : 1;
+        var drawText = function(text, x, y, fillStyle, strokeStyle, alpha) {
 
-        var subCtx = document.createElement('canvas').getContext('2d');
-        subCtx.canvas.width = ctx.canvas.width;
-        subCtx.canvas.height = ctx.canvas.height;
+          alpha = typeof alpha == 'number'? alpha : 1;
 
-        subCtx.textAlign = 'center';
-        subCtx.textBaseline  = 'middle';
-        subCtx.font = 'bold 200px ' + fontFamily;
+          var subCtx = document.createElement('canvas').getContext('2d');
+          subCtx.canvas.width = ctx.canvas.width;
+          subCtx.canvas.height = ctx.canvas.height;
 
-        subCtx.lineWidth = 16;
-        subCtx.strokeStyle = strokeStyle;
-        subCtx.strokeText(text, x, y);
+          subCtx.textAlign = 'center';
+          subCtx.textBaseline  = 'middle';
+          subCtx.font = 'bold 200px ' + fontFamily;
 
-        subCtx.fillStyle = fillStyle;
-        subCtx.fillText(text, x, y);
+          subCtx.lineWidth = 16;
+          subCtx.strokeStyle = strokeStyle;
+          subCtx.strokeText(text, x, y);
 
-        ctx.save();
-        ctx.globalAlpha = alpha;
-        ctx.drawImage(subCtx.canvas, 0, 0);
-        ctx.restore();
-      };
+          subCtx.fillStyle = fillStyle;
+          subCtx.fillText(text, x, y);
 
-      var drawCell = function(text, x, y, current) {
-        if (current) {
-          drawText(text, x, y, '#f00', '#fff');
-        } else {
-          drawText(text, x, y, '#fff', '#000');
-        }
-      };
+          ctx.save();
+          ctx.globalAlpha = alpha;
+          ctx.drawImage(subCtx.canvas, 0, 0);
+          ctx.restore();
+        };
 
-      var drawTranCell = function(text1, text2, x, y, ratio) {
-        drawText(text2, x, y, '#fff', '#000', ratio);
-        drawText(text1, x, y, '#f00', '#fff', 1 - ratio);
-      };
+        var drawCell = function(text, x, y, current) {
+          if (current) {
+            drawText(text, x, y, '#f00', '#fff');
+          } else {
+            drawText(text, x, y, '#fff', '#000');
+          }
+        };
 
-      var threshold = 0.25;
-      var cellClipIndex = ~~(clipIndex / 2) * 2;
+        var drawTranCell = function(text1, text2, x, y, ratio) {
+          drawText(text2, x, y, '#fff', '#000', ratio);
+          drawText(text1, x, y, '#f00', '#fff', 1 - ratio);
+        };
 
-      !function() {
-        var x = event.width / 2;
-        var y = event.height / 2 - hOffset;
-        var currText = cellClipIndex < clips.length?
-          clips[cellClipIndex] : '';
-        var nextText = cellClipIndex + 2 < clips.length?
-          clips[cellClipIndex + 2] : '';
-        if (cellClipIndex != clipIndex) {
-          drawTranCell(currText, nextText, x, y,
-            clipRatio > threshold? 1 : clipRatio / threshold);
-        } else {
-          drawCell(currText, x, y, cellClipIndex == clipIndex);
-        }
-      }();
+        var threshold = 0.25;
+        var cellClipIndex = ~~(clipIndex / 2) * 2;
 
-      cellClipIndex += 1;
+        !function() {
+          var x = event.width / 2;
+          var y = event.height / 2 - hOffset;
+          var currText = cellClipIndex < clips.length?
+            clips[cellClipIndex] : '';
+          var nextText = cellClipIndex + 2 < clips.length?
+            clips[cellClipIndex + 2] : '';
+          if (cellClipIndex != clipIndex) {
+            drawTranCell(currText, nextText, x, y,
+              clipRatio > threshold? 1 : clipRatio / threshold);
+          } else {
+            drawCell(currText, x, y, cellClipIndex == clipIndex);
+          }
+        }();
 
-      !function() {
-        var x = event.width / 2;
-        var y = event.height / 2 + hOffset;
-        var currText = cellClipIndex < clips.length?
-          clips[cellClipIndex] : '';
-        var prevText = cellClipIndex - 2 >= 0?
-          clips[cellClipIndex - 2] : '';
-        if (cellClipIndex != clipIndex) {
-          drawTranCell(prevText, currText, x, y,
-            clipRatio > threshold? 1 : clipRatio / threshold);
-        } else {
-          drawCell(currText, x, y, cellClipIndex == clipIndex);
-        }
-      }();
+        cellClipIndex += 1;
+
+        !function() {
+          var x = event.width / 2;
+          var y = event.height / 2 + hOffset;
+          var currText = cellClipIndex < clips.length?
+            clips[cellClipIndex] : '';
+          var prevText = cellClipIndex - 2 >= 0?
+            clips[cellClipIndex - 2] : '';
+          if (cellClipIndex != clipIndex) {
+            drawTranCell(prevText, currText, x, y,
+              clipRatio > threshold? 1 : clipRatio / threshold);
+          } else {
+            drawCell(currText, x, y, cellClipIndex == clipIndex);
+          }
+        }();
+
+      }
 
     }
+  });
 
-  }
-});
+}();
 
     </script>
 

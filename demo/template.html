@@ -16,15 +16,25 @@
 
     <script>
 
-new Vue({
-  el: '#app',
-  methods: {
+!function() {
 
-    renderHandler: function(ctx, detail) {
+  new Vue({
+    el: '#app',
+    methods: {
+
+      renderHandler: function(event) {
+        // event.ctx
+        // event.currentFrame
+        // event.numFrames
+        // event.frameRate
+        // event.width
+        // event.height
+      }
+
     }
+  });
 
-  }
-});
+}();
 
     </script>
 
