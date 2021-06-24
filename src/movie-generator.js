@@ -30,7 +30,7 @@
         '<div>' +
           '<button @click="currentFrame = 0" :title="labels.rew">' +
             '<mov-symbol name="rew" /></button> ' +
-          '<button @click="playing = !playing; if (playing) { play() }"' +
+          '<button @click="togglePlay()"' +
             ' :title="playing? labels.stop : labels.play">' +
             '<mov-symbol :name="playing? \'stop\' : \'play\'" /></button>' +
           ' <label><input type="checkbox" v-model="loop"' +
@@ -50,7 +50,7 @@
     '</div>',
     components: {
       movSymbol: {
-        template: '<svg class="mov-symbol" vieBox="0 0 16 16"' +
+        template: '<svg class="mov-symbol" viewBox="0 0 16 16"' +
             ' style="vertical-align: middle;">' +
           '<rect v-if="false" x="0" y="0" width="16"' +
             ' height="16" fill="#ccc" stroke="none"/>' +
@@ -70,11 +70,6 @@
         '</svg>',
         props: {
           name: { type: String, default: 'play' }
-        },
-        data: function() {
-          return {
-            width: 16, height: 16
-          }
         }
       }
     },
@@ -98,7 +93,7 @@
           time: 'Time',
           play: 'Play',
           stop: 'Stop',
-          rew: 'Rew',
+          rew: 'Rewind',
           loop: 'Loop',
           download: 'Download Images'
         }
@@ -144,6 +139,12 @@
       }
     },
     methods: {
+      togglePlay: function() {
+        this.playing = !this.playing;
+        if (this.playing) {
+          this.play();
+        }
+      },
       play: function() {
 
         var play = function(time) {

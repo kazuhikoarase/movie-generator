@@ -37,11 +37,16 @@
       renderHandler: function(event) {
 
         var ctx = event.ctx;
+        var currentFrame = event.currentFrame;
+        var numFrames = event.numFrames;
+        var frameRate = event.frameRate;
+        var width = event.width;
+        var height = event.height;
 
         ctx.save();
 
-        ctx.translate(event.width / 2, event.height / 2);
-        ctx.rotate(Math.PI * 2 * event.currentFrame / event.numFrames);
+        ctx.translate(width / 2, height / 2);
+        ctx.rotate(Math.PI * 2 * currentFrame / numFrames);
 
         ctx.beginPath();
         ctx.moveTo(0, 0);
