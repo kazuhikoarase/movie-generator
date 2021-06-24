@@ -28,11 +28,11 @@
             ' v-model="currentFrame" :style="timeRangeStyle" />' +
         '</div>' +
         '<div>' +
-          '<button style="width: 50px;"' +
-            ' @click="currentFrame = 0"> {{ labels.rew }} </button> ' +
-          '<button style="width: 50px;"' +
+          '<button style="width: 36px;"' +
+            ' @click="currentFrame = 0"><mov-symbol name="rew" /></button> ' +
+          '<button style="width: 36px;"' +
             ' @click="playing = !playing; if (playing) { play() }"' +
-            '> {{playing? labels.stop : labels.play }} </button>' +
+            '><mov-symbol :name="playing? \'stop\' : \'play\'" /></button>' +
           ' <label><input type="checkbox" v-model="loop"' +
             '/>{{labels.loop}}</label>' +
           ' <button style="float:right;" @click="download_clickHandler"' +
@@ -47,6 +47,32 @@
         '</div>' +
       '</div>' +
     '</div>',
+    components: {
+      movSymbol: {
+        template: '<svg :width="width + \'px\'" :height="height + \'px\'"' +
+            ' vieBox="0 0 16 16"' +
+            ' style="vertical-align: middle;" class="mov-symbol">' +
+          '<rect v-if="false" x="0" y="0" width="16"' +
+            ' height="16" fill="#ccc" stroke="none"/>' +
+          '<g v-if="name==\'play\'">' +
+            '<path d="M14 8L2 0L2 16Z" />' +
+          '</g>' +
+          '<rect v-if="name==\'stop\'" x="2" y="2" width="12" height="12" />' +
+          '<g v-if="name==\'rew\'">' +
+            '<path d="M1 0L1 16L4 16L4 0Z" />' +
+            '<path d="M3 8L15 0L15 16Z" />' +
+          '</g>' +
+        '</svg>',
+        props: {
+          name: { type: String, default: 'play' }
+        },
+        data: function() {
+          return {
+            width: 16, height: 16
+          }
+        }
+      }
+    },
     props: {
       width: { type: Number, default: 400 },
       height: { type: Number, default: 300 },
@@ -144,10 +170,10 @@
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
         this.$emit('render', ctx, {
           currentFrame: currentFrame,
-          width: this.width,
-          height: this.height,
           numFrames: this.numFrames,
-          frameRate: this.frameRate
+          frameRate: this.frameRate,
+          width: this.width,
+          height: this.height
         });
       },
       renderBackground: function() {

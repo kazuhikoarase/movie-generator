@@ -10,3 +10,8 @@
   font-family: sans-serif;
   font-size: 11pt;
 }
+
+.mov-symbol {
+  stroke: none;
+  fill: #000;
+}
