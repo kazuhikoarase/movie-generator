@@ -28,15 +28,16 @@
             ' v-model="currentFrame" :style="timeRangeStyle" />' +
         '</div>' +
         '<div>' +
-          '<button style="width: 36px;"' +
-            ' @click="currentFrame = 0"><mov-symbol name="rew" /></button> ' +
-          '<button style="width: 36px;"' +
-            ' @click="playing = !playing; if (playing) { play() }"' +
-            '><mov-symbol :name="playing? \'stop\' : \'play\'" /></button>' +
+          '<button @click="currentFrame = 0" :title="labels.rew">' +
+            '<mov-symbol name="rew" /></button> ' +
+          '<button @click="playing = !playing; if (playing) { play() }"' +
+            ' :title="playing? labels.stop : labels.play">' +
+            '<mov-symbol :name="playing? \'stop\' : \'play\'" /></button>' +
           ' <label><input type="checkbox" v-model="loop"' +
             '/>{{labels.loop}}</label>' +
           ' <button style="float:right;" @click="download_clickHandler"' +
-            '> {{ labels.download }} </button>' +
+            ' :title="labels.download"' +
+            '><mov-symbol name="download" /></button>' +
         '</div>' +
         '<div v-if="statusBar">' +
           '{{ labels.frameNumber }}: ' +
@@ -53,13 +54,18 @@
             ' style="vertical-align: middle;">' +
           '<rect v-if="false" x="0" y="0" width="16"' +
             ' height="16" fill="#ccc" stroke="none"/>' +
-          '<g v-if="name==\'play\'">' +
+          '<g v-if="name==\'play\'" stroke="none">' +
             '<path d="M14 8L2 0L2 16Z" />' +
           '</g>' +
-          '<rect v-if="name==\'stop\'" x="2" y="2" width="12" height="12" />' +
+          '<rect v-if="name==\'stop\'" x="2" y="2" width="12" height="12" stroke="none" />' +
           '<g v-if="name==\'rew\'">' +
-            '<path d="M1 0L1 16L4 16L4 0Z" />' +
-            '<path d="M3 8L15 0L15 16Z" />' +
+            '<path d="M2.5 0L2.5 16" fill="none" />' +
+            '<path d="M3 8L15 0L15 16Z" stroke="none" />' +
+          '</g>' +
+          '<g v-if="name==\'download\'" fill="none">' +
+            '<path d="M0 14.5L16 14.5" />' +
+            '<path d="M8 0L8 10" />' +
+            '<path d="M3 5L8 11L13 5" stroke-linecap="round" stroke-linejoin="round" />' +
           '</g>' +
         '</svg>',
         props: {

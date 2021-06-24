@@ -21,9 +21,14 @@
   font-size: 11pt;
 }
 
+.movie-frame BUTTON {
+  width: 36px;
+}
+
 .mov-symbol {
   width: 16px;
   height: 16px;
-  stroke: none;
+  stroke-width: 3;
+  stroke: #000;
   fill: #000;
 }
