@@ -22,6 +22,8 @@
 }
 
 .mov-symbol {
+  width: 16px;
+  height: 16px;
   stroke: none;
   fill: #000;
 }

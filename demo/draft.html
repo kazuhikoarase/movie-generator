@@ -36,10 +36,12 @@ new Vue({
   },
   methods: {
 
-    renderHandler: function(ctx, detail) {
+    renderHandler: function(event) {
+
+      var ctx = event.ctx;
 
       var clips = this.clips;
-      var clipPos = detail.currentFrame / detail.numFrames * clips.length;
+      var clipPos = event.currentFrame / event.numFrames * clips.length;
       var clipIndex = ~~clipPos;
       var clipRatio = clipPos - clipIndex;
       var fontFamily = 'sans-serif';
@@ -88,8 +90,8 @@ new Vue({
       var cellClipIndex = ~~(clipIndex / 2) * 2;
 
       !function() {
-        var x = detail.width / 2;
-        var y = detail.height / 2 - hOffset;
+        var x = event.width / 2;
+        var y = event.height / 2 - hOffset;
         var currText = cellClipIndex < clips.length?
           clips[cellClipIndex] : '';
         var nextText = cellClipIndex + 2 < clips.length?
@@ -105,8 +107,8 @@ new Vue({
       cellClipIndex += 1;
 
       !function() {
-        var x = detail.width / 2;
-        var y = detail.height / 2 + hOffset;
+        var x = event.width / 2;
+        var y = event.height / 2 + hOffset;
         var currText = cellClipIndex < clips.length?
           clips[cellClipIndex] : '';
         var prevText = cellClipIndex - 2 >= 0?

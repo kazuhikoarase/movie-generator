@@ -12,13 +12,14 @@
 
     <div id="app">
 
-      <h1>Test</h1>
-
       <h2>First Movie</h2>
       <movie @render="renderHandler"></movie>
 
-      <h2>Auto Play / Disable Loop</h2>
-      <movie @render="renderHandler" :auto-play="true" :loop="false"></movie>
+      <h2>Enable Auto Play</h2>
+      <movie @render="renderHandler" :auto-play="true"></movie>
+
+      <h2>Enable Loop</h2>
+      <movie @render="renderHandler" :loop="true"></movie>
 
       <h2>Hide Status Bar</h2>
       <movie @render="renderHandler" :status-bar="false"></movie>
@@ -31,12 +32,14 @@ new Vue({
   el: '#app',
   methods: {
 
-    renderHandler: function(ctx, detail) {
+    renderHandler: function(event) {
+
+      var ctx = event.ctx;
 
       ctx.save();
 
-      ctx.translate(detail.width / 2, detail.height / 2);
-      ctx.rotate(Math.PI * 2 * detail.currentFrame / detail.numFrames);
+      ctx.translate(event.width / 2, event.height / 2);
+      ctx.rotate(Math.PI * 2 * event.currentFrame / event.numFrames);
 
       ctx.beginPath();
       ctx.moveTo(0, 0);

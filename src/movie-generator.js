@@ -49,9 +49,8 @@
     '</div>',
     components: {
       movSymbol: {
-        template: '<svg :width="width + \'px\'" :height="height + \'px\'"' +
-            ' vieBox="0 0 16 16"' +
-            ' style="vertical-align: middle;" class="mov-symbol">' +
+        template: '<svg class="mov-symbol" vieBox="0 0 16 16"' +
+            ' style="vertical-align: middle;">' +
           '<rect v-if="false" x="0" y="0" width="16"' +
             ' height="16" fill="#ccc" stroke="none"/>' +
           '<g v-if="name==\'play\'">' +
@@ -74,12 +73,12 @@
       }
     },
     props: {
-      width: { type: Number, default: 400 },
-      height: { type: Number, default: 300 },
+      width: { type: Number, default: 320 },
+      height: { type: Number, default: 240 },
       numFrames: { type: Number, default: 72 },
       frameRate: { type: Number, default: 24 },
       scale: { type: Number, default: 1 },
-      loop: { type: Boolean, default: true },
+      loop: { type: Boolean, default: false },
       autoPlay: { type: Boolean, default: false },
       statusBar: { type: Boolean, default: true },
       name: { type: String, default: 'untitled-movie' }
@@ -168,7 +167,8 @@
       },
       render: function(ctx, currentFrame) {
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-        this.$emit('render', ctx, {
+        this.$emit('render', {
+          ctx: ctx,
           currentFrame: currentFrame,
           numFrames: this.numFrames,
           frameRate: this.frameRate,

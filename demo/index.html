@@ -9,11 +9,13 @@
     <script src="../src/movie-generator.js"></script>
     <link rel="stylesheet" href="../src/movie-generator.css" />
     <style>
+
 BODY {
   margin: 0px;
   padding: 0px;
   overflow: hidden;
 }
+
 .pane {
   position: absolute;
 }
@@ -24,12 +26,25 @@ BODY {
 }
 
 .left {
-  padding: 8px 16px;
   border-right: 1px solid #ccc;
+  min-width: 160px;
 }
 
 .center {
   border: none;
+}
+
+.link {
+  padding: 2px 8px;
+  cursor: default;
+}
+
+.link[selected] {
+  background-color: rgba(0,0,0,0.2);
+}
+
+.link:hover {
+  background-color: rgba(0,0,0,0.1);
 }
 
     </style>
@@ -41,9 +56,11 @@ BODY {
         <h1>Movie Generator</h1>
       </div>
       <div ref="left" class="pane left">
-        <div v-for="file in files" >
-          <a :href="'#' + file.label">{{file.label}}</a>
-        </div>
+        <div v-for="file in files" class="link"
+            :selected="selected == file.label"
+            @mousedown.prevent
+            @click="location.href = '#' + file.label"
+        >{{file.label}}</div>
       </div>
       <iframe ref="center" class="pane center">
       </iframe>
@@ -57,7 +74,8 @@ new Vue({
     files: [
       { label: 'test', href: 'test.html' },
       { label: 'draft', href: 'draft.html' }
-    ]
+    ],
+    selected: ''
   },
   methods: {
 
@@ -91,6 +109,7 @@ new Vue({
         hash = hash.substring(1);
         this.files.forEach(function(file) {
           if (file.label == hash) {
+            this.selected = hash;
             this.$refs.center.src = file.href;
           }
         }.bind(this) );
