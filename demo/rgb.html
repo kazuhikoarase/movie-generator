@@ -12,8 +12,7 @@
 
     <div id="app">
 
-
-      <movie @render="renderHandler"></movie>
+      <movie @render="renderHandler" :auto-play="true" :loop="true"></movie>
 
     </div>
 
@@ -33,17 +32,22 @@
         var width = event.width;
         var height = event.height;
 
-        if (!(opts.start <= currentFrame &&
-            currentFrame < opts.start + opts.length) ) {
-          return;
+        var start = opts.start;
+        var end = opts.start + opts.length;
+
+        var alpha = 0;
+
+        if (start <= currentFrame && currentFrame < end) {
+          alpha = 1;
         }
 
-        var size = opts.size;
+        var size = opts.size || 100;
 
         ctx.save();
 
         ctx.translate(width / 2 + opts.x, height / 2 + opts.y);
 
+        ctx.globalAlpha = alpha;
         ctx.fillStyle = opts.color;
         ctx.fillRect(-size / 2, -size / 2, size, size);
 
@@ -53,7 +57,7 @@
     }
   };
 
-  var w = 320 / 3;
+  var w = 100;
   var clips = [
     createClip({ color: '#f00', start: 0, length: 24,
       x: -w, y: 0, size: w } ),
