@@ -40,9 +40,9 @@
             '><mov-symbol name="download" /></button>' +
         '</div>' +
         '<div v-if="statusBar">' +
-          '{{ labels.frameNumber }}: ' +
+          '{{ labels.currentFrame }}: ' +
             '<span style="width:60px; display:inline-block;">' +
-              '{{ frameNumber }}</span>' +
+              '{{ currentFrame }}</span>' +
           '{{ labels.time }}: ' +
             '<span>{{ currentTime }}</span>' +
         '</div>' +
@@ -89,7 +89,7 @@
         currentFrame: 0,
         playing: false,
         labels: {
-          frameNumber: 'FrameNumber',
+          currentFrame: 'Current Frame',
           time: 'Time',
           play: 'Play',
           stop: 'Stop',
@@ -113,9 +113,6 @@
           ' ' + this.frameRate + 'fps' +
           ' ' + this.numFrames + 'frames' +
           ' ' + formatTime(this.numFrames / this.frameRate);
-      },
-      frameNumber: function() {
-        return +this.currentFrame + 1;
       },
       currentTime: function() {
         return formatTime(this.currentFrame / this.frameRate);
@@ -217,11 +214,11 @@
           if (currentFrame < this.numFrames) {
             this.render(ctx, currentFrame);
             ctx.canvas.toBlob(function(data) {
-              var seq = '' + (currentFrame + 1);
+              var seq = '' + ucurrentFrame;
               while (seq.length < 6) {
                 seq = '0' + seq;
               }
-              var filename = this.name + seq + '.png';
+              var filename = this.name + '/FRM_' + seq + '.png';
               zip.file(filename, data);
               currentFrame += 1;
               if (currentFrame % 10 == 0) {
