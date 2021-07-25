@@ -82,7 +82,7 @@
       loop: { type: Boolean, default: false },
       autoPlay: { type: Boolean, default: false },
       statusBar: { type: Boolean, default: true },
-      name: { type: String, default: 'untitled-movie' }
+      name: { type: String, default: 'untitled' }
     },
     data: function() {
       return {
@@ -214,11 +214,12 @@
           if (currentFrame < this.numFrames) {
             this.render(ctx, currentFrame);
             ctx.canvas.toBlob(function(data) {
-              var seq = '' + ucurrentFrame;
+              var seq = '' + currentFrame;
               while (seq.length < 6) {
                 seq = '0' + seq;
               }
-              var filename = this.name + '/FRM_' + seq + '.png';
+              var filename = this.name + '/' +
+                this.name + '_' + seq + '.png';
               zip.file(filename, data);
               currentFrame += 1;
               if (currentFrame % 10 == 0) {
