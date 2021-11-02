@@ -28,9 +28,9 @@
             ' v-model="currentFrame" :style="timeRangeStyle" />' +
         '</div>' +
         '<div>' +
-          '<button @click="currentFrame = 0" :title="labels.rew">' +
+          '<button @click="rew_clickHandler" :title="labels.rew">' +
             '<mov-symbol name="rew" /></button> ' +
-          '<button @click="togglePlay()"' +
+          '<button @click="togglePlay_clickHandler"' +
             ' :title="playing? labels.stop : labels.play">' +
             '<mov-symbol :name="playing? \'stop\' : \'play\'" /></button>' +
           ' <label><input type="checkbox" v-model="loop"' +
@@ -136,9 +136,15 @@
       }
     },
     methods: {
-      togglePlay: function() {
+      rew_clickHandler: function() {
+        this.currentFrame = 0;
+      },
+      togglePlay_clickHandler: function() {
         this.playing = !this.playing;
         if (this.playing) {
+          if (this.currentFrame + 1 >= this.numFrames) {
+            this.currentFrame = 0;
+          }
           this.play();
         }
       },
